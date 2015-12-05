@@ -1,0 +1,25 @@
+{
+  "name": "magi-network",
+  "version": "0.0.1",
+  "description": "An experimental Magi supercomputer network",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emersion/node-magi-network.git"
+  },
+  "keywords": [
+    "evangelion",
+    "peer",
+    "decision",
+    "brain"
+  ],
+  "author": "emersion",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/emersion/node-magi-network/issues"
+  },
+  "homepage": "https://github.com/emersion/node-magi-network#readme"
+}
