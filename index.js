@@ -14,11 +14,12 @@ function createMesh(done) {
 	});
 }
 
+var names = ['Melchior', 'Balthasar', 'Casper'];
 var units = [];
 
 [0, 1, 2].forEach(function (i) {
 	createMesh(function (err, mesh) {
-		console.log('Created mesh', mesh.hashname);
+		console.log('Created mesh', i+1, names[i], mesh.hashname);
 
 		var unit = new Unit(mesh);
 		units.push(unit);
