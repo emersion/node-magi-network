@@ -21,5 +21,8 @@
   "bugs": {
     "url": "https://github.com/emersion/node-magi-network/issues"
   },
-  "homepage": "https://github.com/emersion/node-magi-network#readme"
+  "homepage": "https://github.com/emersion/node-magi-network#readme",
+  "dependencies": {
+    "telehash": "^0.4.7"
+  }
 }
