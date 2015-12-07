@@ -1,6 +1,8 @@
 var th = require('telehash');
+var brain = require('brain');
 var Unit = require('./lib/unit');
-var Module = require('./lib/module');
+var BrainUnit = require('./lib/brain-unit');
+var Executor = require('./lib/executor');
 
 function createMesh(done) {
 	th.generate(function (err, endpoint) {
@@ -27,12 +29,12 @@ var units = [];
 	});
 });
 
-var modName = 'selfdestruct';
-var mod;
+var execName = 'selfdestruct';
+var exec;
 createMesh(function (err, mesh) {
-	console.log('Created module', modName, mesh.hashname);
+	console.log('Created executor', execName, mesh.hashname);
 
-	mod = new Module(mesh, modName);
+	exec = new Executor(mesh, execName);
 });
 
 setTimeout(function () {

@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/emersion/node-magi-network#readme",
   "dependencies": {
+    "brain": "^0.7.0",
     "telehash": "^0.4.7"
   }
 }
