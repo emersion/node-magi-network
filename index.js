@@ -1,5 +1,6 @@
 var th = require('telehash');
 var Unit = require('./lib/unit');
+var Module = require('./lib/module');
 
 function createMesh(done) {
 	th.generate(function (err, endpoint) {
@@ -19,17 +20,25 @@ var units = [];
 
 [0, 1, 2].forEach(function (i) {
 	createMesh(function (err, mesh) {
-		console.log('Created mesh', i+1, names[i], mesh.hashname);
+		console.log('Created unit', i+1, names[i], mesh.hashname);
 
 		var unit = new Unit(mesh);
 		units.push(unit);
 	});
 });
 
+var modName = 'selfdestruct';
+var mod;
+createMesh(function (err, mesh) {
+	console.log('Created module', modName, mesh.hashname);
+
+	mod = new Module(mesh, modName);
+});
+
 setTimeout(function () {
 	var question = {
-		id: '',
-		module: 'autodestruct'
+		id: '0',
+		module: 'selfdestruct'
 	};
 
 	units.forEach(function (unit) {
