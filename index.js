@@ -8,10 +8,15 @@ const Executor = require('./lib/executor')
 const names = ['Melchior', 'Balthasar', 'Casper']
 const units = []
 
-names.forEach((name, i) => {
+function createSwarm() {
 	const sw = swarm()
 	sw.listen(0)
 	sw.join('magi')
+	return sw
+}
+
+names.forEach((name, i) => {
+	const sw = createSwarm()
 
 	const unit = new Unit(sw)
 	units.push(unit)
@@ -19,9 +24,7 @@ names.forEach((name, i) => {
 	console.log('Created unit', i+1, name, sw.id)
 })
 
-const sw = swarm()
-sw.listen(0)
-sw.join('magi')
+const sw = createSwarm()
 const exec = new Executor(sw, 'selfdestruct')
 console.log('Created executor', sw.id)
 
