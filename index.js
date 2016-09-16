@@ -1,49 +1,36 @@
-var th = require('telehash');
-var brain = require('brain');
-var Unit = require('./lib/unit');
-var BrainUnit = require('./lib/brain-unit');
-var Executor = require('./lib/executor');
+'use strict'
 
-function createMesh(done) {
-	th.generate(function (err, endpoint) {
-		if (err) return done('Cannot generate endpoint: '+err);
+const swarm = require('discovery-swarm')
+const Unit = require('./lib/unit')
+const BrainUnit = require('./lib/brain-unit')
+const Executor = require('./lib/executor')
 
-		th.mesh({ id: endpoint }, function (err, mesh) {
-			if (err) return done('Could not initialize mesh: '+err);
+const names = ['Melchior', 'Balthasar', 'Casper']
+const units = []
 
-			mesh.discover(true);
-			done(null, mesh);
-		});
-	});
-}
+names.forEach((name, i) => {
+	const sw = swarm()
+	sw.listen(0)
+	sw.join('magi')
 
-var names = ['Melchior', 'Balthasar', 'Casper'];
-var units = [];
+	const unit = new Unit(sw)
+	units.push(unit)
 
-[0, 1, 2].forEach(function (i) {
-	createMesh(function (err, mesh) {
-		console.log('Created unit', i+1, names[i], mesh.hashname);
+	console.log('Created unit', i+1, name, sw.id)
+})
 
-		var unit = new Unit(mesh);
-		units.push(unit);
-	});
-});
+const sw = swarm()
+sw.listen(0)
+sw.join('magi')
+const exec = new Executor(sw, 'selfdestruct')
 
-var execName = 'selfdestruct';
-var exec;
-createMesh(function (err, mesh) {
-	console.log('Created executor', execName, mesh.hashname);
-
-	exec = new Executor(mesh, execName);
-});
-
-setTimeout(function () {
-	var question = {
+setTimeout(() => {
+	const question = {
 		id: '0',
 		module: 'selfdestruct'
 	};
 
 	units.forEach(function (unit) {
-		unit.ask(question);
-	});
-}, 1000);
+		unit.ask(question)
+	})
+}, 1000)

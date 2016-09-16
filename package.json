@@ -4,7 +4,8 @@
   "description": "An experimental Magi supercomputer network",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./index.js"
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,6 @@
   "homepage": "https://github.com/emersion/node-magi-network#readme",
   "dependencies": {
     "brain": "^0.7.0",
-    "telehash": "^0.4.7"
+    "discovery-swarm": "^4.0.2"
   }
 }
