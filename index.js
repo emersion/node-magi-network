@@ -23,6 +23,7 @@ const sw = swarm()
 sw.listen(0)
 sw.join('magi')
 const exec = new Executor(sw, 'selfdestruct')
+console.log('Created executor', sw.id)
 
 setTimeout(() => {
 	const question = {
@@ -30,7 +31,9 @@ setTimeout(() => {
 		module: 'selfdestruct'
 	};
 
-	units.forEach(function (unit) {
+	units.forEach(unit => {
 		unit.ask(question)
 	})
+
+	console.log('Started poll:', question)
 }, 1000)
