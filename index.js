@@ -40,9 +40,7 @@ console.log('Created HUD', hud.id)
 
 Promise.all(units.concat(exec, hud).map(node => {
 	return new Promise((resolve, reject) => {
-		node.on('connected', () => {
-			resolve()
-		})
+		node.on('connected', () => resolve())
 	})
 })).then(() => {
 	console.log('Network is fully connected')
