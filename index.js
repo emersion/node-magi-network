@@ -28,9 +28,11 @@ names.forEach((name, i) => {
 	console.log('Created unit', i+1, name, sw.id)
 })
 
-const sw = createSwarm()
-const exec = new Executor(sw, 'selfdestruct')
-console.log('Created executor', sw.id)
+const exec = new Executor(createSwarm(), 'selfdestruct')
+console.log('Created executor', exec.swarm.id)
+
+const hud = new Executor(createSwarm(), 'selfdestruct')
+console.log('Created HUD', hud.swarm.id)
 
 setTimeout(() => {
 	const question = {
@@ -38,7 +40,7 @@ setTimeout(() => {
 		module: 'selfdestruct'
 	}
 
-	exec.publish({
+	hud.publish({
 		type: 'question',
 		data: question
 	})
