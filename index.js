@@ -5,13 +5,15 @@ const Unit = require('./lib/unit')
 const BrainUnit = require('./lib/brain-unit')
 const Executor = require('./lib/executor')
 
+const topic = 'magi'
+
 const names = ['Melchior', 'Balthasar', 'Casper']
 const units = []
 
 function createSwarm() {
 	const sw = swarm()
 	sw.listen(0)
-	sw.join('magi')
+	sw.join(topic)
 	return sw
 }
 
