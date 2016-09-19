@@ -18,6 +18,14 @@ function createSwarm() {
 	return sw
 }
 
+function allConnected(nodes) {
+	return Promise.all(nodes.map(node => {
+		return new Promise((resolve, reject) => {
+			node.on('connected', () => resolve())
+		})
+	}))
+}
+
 const units = []
 
 names.forEach((name, i) => {
@@ -38,11 +46,7 @@ console.log('Created executor', exec.id)
 const hud = new Node(createSwarm())
 console.log('Created HUD', hud.id)
 
-Promise.all(units.concat(exec, hud).map(node => {
-	return new Promise((resolve, reject) => {
-		node.on('connected', () => resolve())
-	})
-})).then(() => {
+allConnected(units.concat(exec, hud)).then(() => {
 	console.log('Network is fully connected')
 
 	const question = {
@@ -54,4 +58,17 @@ Promise.all(units.concat(exec, hud).map(node => {
 	hud.publish('question', question)
 
 	console.log('Started poll:', question)
+
+	return new Promise((resolve, reject) => {
+		exec.on('vote', (question, poll) => {
+			console.log('Got vote:', question, poll)
+		})
+
+		exec.on('result', (question, ok) => {
+			resolve({question, ok})
+		})
+	})
+}).then(({question, ok}) => {
+	console.log('Poll result:', question, ok)
+	process.exit()
 })
