@@ -1,6 +1,7 @@
 'use strict'
 
 const swarm = require('discovery-swarm')
+const Node = require('./lib/node')
 const Unit = require('./lib/unit')
 const BrainUnit = require('./lib/brain-unit')
 const Executor = require('./lib/executor')
@@ -31,7 +32,7 @@ names.forEach((name, i) => {
 const exec = new Executor(createSwarm(), 'selfdestruct')
 console.log('Created executor', exec.swarm.id)
 
-const hud = new Executor(createSwarm(), 'selfdestruct')
+const hud = new Node(createSwarm())
 console.log('Created HUD', hud.swarm.id)
 
 setTimeout(() => {
