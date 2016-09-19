@@ -32,7 +32,7 @@ names.forEach((name, i) => {
 	console.log('Created unit', i+1, name, unit.id)
 })
 
-const exec = new Executor(createSwarm(), 'selfdestruct')
+const exec = new Executor(createSwarm(), 'selfdestruct', units.length)
 console.log('Created executor', exec.id)
 
 const hud = new Node(createSwarm())
