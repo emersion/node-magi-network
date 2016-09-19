@@ -55,10 +55,6 @@ allConnected(units.concat(exec, hud)).then(() => {
 		data: { r: 0.95, g: 0.02, b: 0.43 }
 	}
 
-	hud.publish('question', question)
-
-	console.log('Started poll:', question)
-
 	return new Promise((resolve, reject) => {
 		exec.on('vote', (question, poll) => {
 			console.log('Got vote:', question, poll)
@@ -67,8 +63,14 @@ allConnected(units.concat(exec, hud)).then(() => {
 		exec.on('result', (question, ok) => {
 			resolve({question, ok})
 		})
+
+		hud.publish('question', question)
+		console.log('Started poll:', question)
 	})
 }).then(({question, ok}) => {
 	console.log('Poll result:', question, ok)
 	process.exit()
+}).catch(err => {
+	console.error(err)
+	process.exit(1)
 })
