@@ -23,6 +23,8 @@ names.forEach((name, i) => {
 	const unit = new Unit(sw)
 	units.push(unit)
 
+	unit.decide = question => false
+
 	console.log('Created unit', i+1, name, sw.id)
 })
 
@@ -34,10 +36,11 @@ setTimeout(() => {
 	const question = {
 		id: '0',
 		module: 'selfdestruct'
-	};
+	}
 
-	units.forEach(unit => {
-		unit.ask(question)
+	exec.publish({
+		type: 'question',
+		data: question
 	})
 
 	console.log('Started poll:', question)
