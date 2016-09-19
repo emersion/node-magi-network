@@ -41,10 +41,7 @@ setTimeout(() => {
 		module: 'selfdestruct'
 	}
 
-	hud.publish({
-		type: 'question',
-		data: question
-	})
+	hud.publish('question', question)
 
 	console.log('Started poll:', question)
 }, 1000)
