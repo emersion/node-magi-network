@@ -37,7 +37,7 @@ names.forEach((name, i) => {
 	const unit = new BrainUnit(sw, net, 'black')
 	units.push(unit)
 
-	console.log('Created unit', i+1, name, unit.id)
+	console.log('Created unit', name + '-' + (i+1), unit.id)
 })
 
 const exec = new Executor(createSwarm(), 'selfdestruct', units.length)
