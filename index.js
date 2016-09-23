@@ -27,7 +27,6 @@ function allConnected(nodes) {
 }
 
 const units = []
-
 names.forEach((name, i) => {
 	const sw = createSwarm()
 
@@ -40,7 +39,7 @@ names.forEach((name, i) => {
 	console.log('Created unit', name + '-' + (i+1), unit.id)
 })
 
-const exec = new Executor(createSwarm(), 'selfdestruct', units.length)
+const exec = new Executor(createSwarm(), 'selfdestruct', units.map(unit => unit.id))
 console.log('Created executor', exec.id)
 
 const hud = new Node(createSwarm())
