@@ -54,6 +54,11 @@ allConnected(units.concat(exec, hud)).then(() => {
 		data: { r: 0.95, g: 0.02, b: 0.43 }
 	}
 
+	var questionJson = process.argv[2]
+	if (questionJson) {
+		question.data = JSON.parse(questionJson)
+	}
+
 	return new Promise((resolve, reject) => {
 		exec.on('vote', (question, poll) => {
 			console.log('Got vote:', question, poll)
