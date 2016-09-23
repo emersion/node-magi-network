@@ -26,6 +26,6 @@
   "dependencies": {
     "brain": "^0.7.0",
     "discovery-swarm": "^4.0.2",
-    "secure-gossip": "emersion/secure-gossip"
+    "secure-gossip": "^0.3.0"
   }
 }
