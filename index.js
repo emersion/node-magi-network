@@ -1,22 +1,17 @@
 'use strict'
 
-const swarm = require('discovery-swarm')
+const express = require('express')
+const serveStatic = require('serve-static')
+const signalhub = require('signalhub')
+const swarm = require('hybrid-swarm')
 const brain = require('brain')
 const Node = require('./lib/node')
-const Unit = require('./lib/unit')
 const BrainUnit = require('./lib/brain-unit')
-const Executor = require('./lib/executor')
 const trained = require('./trained')
 
 const topic = 'magi'
-const names = ['melchior', 'balthasar', 'casper']
 
-function createSwarm() {
-	const sw = swarm()
-	sw.listen(0)
-	sw.join(topic)
-	return sw
-}
+const names = ['melchior', 'balthasar', 'casper']
 
 function allConnected(nodes) {
 	return Promise.all(nodes.map(node => {
@@ -26,54 +21,83 @@ function allConnected(nodes) {
 	}))
 }
 
-const units = []
-names.forEach((name, i) => {
-	const sw = createSwarm()
-
-	const net = new brain.NeuralNetwork()
-	net.fromJSON(trained[i])
-
-	const unit = new BrainUnit(sw, net, 'black')
-	units.push(unit)
-
-	console.log('Created unit', name + '-' + (i+1), unit.id)
-})
-
-const exec = new Executor(createSwarm(), 'selfdestruct', units.map(unit => unit.id))
-console.log('Created executor', exec.id)
-
-const hud = new Node(createSwarm())
-console.log('Created HUD', hud.id)
-
-allConnected(units.concat(exec, hud)).then(() => {
-	console.log('Network is fully connected')
-
-	const question = {
-		id: '0',
-		module: 'selfdestruct',
-		data: { r: 0.95, g: 0.02, b: 0.43 }
-	}
-
-	var questionJson = process.argv[2]
-	if (questionJson) {
-		question.data = JSON.parse(questionJson)
-	}
+function createSignalhubServer() {
+	const server = require('signalhub/server')()
 
 	return new Promise((resolve, reject) => {
-		exec.on('vote', (question, poll) => {
-			console.log('Got vote:', question, poll)
-		})
-
-		exec.on('result', (question, ok) => {
-			resolve({question, ok})
-		})
-
-		hud.publish('question', question)
-		console.log('Started poll:', question)
+		server.listen(8081, '127.0.0.1', () => resolve(server))
 	})
-}).then(({question, ok}) => {
-	console.log('Poll result:', question, ok)
-	process.exit()
+}
+
+function createHttpServer(units) {
+	const app = express()
+
+	app.get('/api/units', (req, res) => {
+		res.json(units.map(unit => unit.id))
+	})
+
+	app.use(serveStatic('public'))
+
+	return new Promise((resolve, reject) => {
+		const server = app.listen(8080, () => resolve(server))
+	})
+}
+
+function createSwarm(opts) {
+	opts = opts || {}
+	opts.signalhub = signalhub(topic, ['http://127.0.0.1:8081'])
+
+	const sw = swarm(opts)
+
+	if (sw.node) {
+		sw.node.join(topic)
+	}
+
+	return sw
+}
+
+function createBridge() {
+	return new Node(createSwarm({
+		//wrtc: require('wrtc')
+		wrtc: require('electron-webrtc')()
+	}))
+}
+
+function createUnits() {
+	let i = 0
+	return names.map(name => {
+		const sw = createSwarm()
+
+		const net = new brain.NeuralNetwork()
+		net.fromJSON(trained[i])
+
+		const unit = new BrainUnit(sw, net, 'black')
+
+		i++
+		console.log('Created unit', name + '-' + i, unit.id)
+
+		return unit
+	})
+}
+
+function createNodes() {
+	const units = createUnits()
+
+	const bridge = createBridge()
+	console.log('Created bridge', bridge.id)
+
+	return allConnected(units.concat(bridge)).then(() => units)
+}
+
+createSignalhubServer().then(server => {
+	console.log('signalhub server listening on port %d', server.address().port)
+	return createNodes()
+}).then(units => {
+	console.log('Network is fully connected')
+
+	return createHttpServer(units)
+}).then(server => {
+	console.log('http server listening on port %d', server.address().port)
 }).catch(err => {
 	console.error(err)
 	process.exit(1)

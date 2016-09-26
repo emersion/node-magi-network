@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./index.js"
+    "start": "node ./index.js",
+    "build": "browserify ./public/lib/index.js -o public/bundle.js"
   },
   "repository": {
     "type": "git",
@@ -26,6 +27,13 @@
   "dependencies": {
     "brain": "^0.7.0",
     "discovery-swarm": "^4.0.2",
-    "secure-gossip": "^0.3.0"
+    "express": "^4.14.0",
+    "finalhandler": "^0.5.0",
+    "hybrid-swarm": "^1.2.0",
+    "secure-gossip": "^0.3.0",
+    "serve-static": "^1.11.1"
+  },
+  "devDependencies": {
+    "browserify": "^13.1.0"
   }
 }
