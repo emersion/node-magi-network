@@ -91,7 +91,7 @@ class Node extends EventEmitter {
 		this.id = this.gossip.keys.public
 
 		let connected = false
-		sw.on('connection', (conn) => {
+		sw.on('connection', conn => {
 			conn.pipe(this.gossip.createPeerStream()).pipe(conn)
 
 			if (!connected) {
@@ -45486,8 +45486,17 @@ fetchUnits().then(units => {
 	console.log('Started poll:', question)
 
 	return new Promise((resolve, reject) => {
+		const unitsEls = document.querySelectorAll('#magi > .unit')
+
 		exec.on('vote', (question, poll) => {
 			console.log('Got vote:', question, poll)
+
+			exec.units.forEach((id, i) => {
+				const classes = unitsEls[i].classList;
+				classes.remove('voted-yes')
+				classes.remove('voted-no')
+				classes.add(poll[id] ? 'voted-yes' : 'voted-no')
+			})
 		})
 
 		exec.on('result', (question, ok) => {
