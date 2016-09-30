@@ -31,7 +31,8 @@
     "finalhandler": "^0.5.0",
     "hybrid-swarm": "^1.2.0",
     "secure-gossip": "^0.3.0",
-    "serve-static": "^1.11.1"
+    "serve-static": "^1.11.1",
+    "signalhub": "^4.7.4"
   },
   "devDependencies": {
     "browserify": "^13.1.0"
