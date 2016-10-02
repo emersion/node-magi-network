@@ -45444,6 +45444,7 @@ function extend() {
 },{}],248:[function(require,module,exports){
 'use strict'
 
+const path = require('path')
 const signalhub = require('signalhub')
 const swarm = require('hybrid-swarm')
 const Executor = require('../../lib/executor')
@@ -45457,14 +45458,14 @@ function connected() {
 }
 
 function fetchUnits() {
-	return fetch('/api/units').then(res => res.json())
+	return fetch('api/units').then(res => res.json())
 }
 
 fetchUnits().then(units => {
 	console.log('Got a list of %d units', units.length)
 
 	const sw = swarm({
-		signalhub: signalhub(topic, ['http://127.0.0.1:8081'])
+		signalhub: signalhub(topic, [window.location.origin+path.join(window.location.pathname, '/signalhub')])
 	})
 
 	const name = sw.browser.me
@@ -45492,7 +45493,7 @@ fetchUnits().then(units => {
 			console.log('Got vote:', question, poll)
 
 			exec.units.forEach((id, i) => {
-				const classes = unitsEls[i].classList;
+				const classes = unitsEls[i].classList
 				classes.remove('voted-yes')
 				classes.remove('voted-no')
 				classes.add(poll[id] ? 'voted-yes' : 'voted-no')
@@ -45510,4 +45511,4 @@ fetchUnits().then(units => {
 	console.error(err)
 })
 
-},{"../../lib/executor":1,"hybrid-swarm":135,"signalhub":200}]},{},[248]);
+},{"../../lib/executor":1,"hybrid-swarm":135,"path":164,"signalhub":200}]},{},[248]);

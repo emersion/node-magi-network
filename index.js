@@ -1,5 +1,7 @@
 'use strict'
 
+const http = require('http')
+const url = require('url')
 const express = require('express')
 const serveStatic = require('serve-static')
 const signalhub = require('signalhub')
@@ -9,6 +11,7 @@ const Node = require('./lib/node')
 const BrainUnit = require('./lib/brain-unit')
 const trained = require('./trained')
 
+const port = 8080
 const topic = 'magi'
 
 const names = ['melchior', 'balthasar', 'casper']
@@ -21,31 +24,28 @@ function allConnected(nodes) {
 	}))
 }
 
-function createSignalhubServer() {
-	const server = require('signalhub/server')()
-
-	return new Promise((resolve, reject) => {
-		server.listen(8081, '127.0.0.1', () => resolve(server))
-	})
-}
-
-function createHttpServer(units) {
+function createHttpServer(listUnits) {
 	const app = express()
 
 	app.get('/api/units', (req, res) => {
-		res.json(units.map(unit => unit.id))
+		res.json(listUnits().map(unit => unit.id))
+	})
+
+	const signalhubServer = require('signalhub/server')()
+	app.use('/signalhub', (req, res) => {
+		signalhubServer.emit('request', req, res)
 	})
 
 	app.use(serveStatic('public'))
 
 	return new Promise((resolve, reject) => {
-		const server = app.listen(8080, () => resolve(server))
+		const server = app.listen(port, () => resolve(server))
 	})
 }
 
 function createSwarm(opts) {
 	opts = opts || {}
-	opts.signalhub = signalhub(topic, ['http://127.0.0.1:8081'])
+	opts.signalhub = signalhub(topic, ['http://127.0.0.1:'+port+'/signalhub'])
 
 	const sw = swarm(opts)
 
@@ -89,15 +89,13 @@ function createNodes() {
 	return allConnected(units.concat(bridge)).then(() => units)
 }
 
-createSignalhubServer().then(server => {
-	console.log('signalhub server listening on port %d', server.address().port)
+let listUnits = () => null
+createHttpServer(() => listUnits()).then(server => {
+	console.log('http server listening on port %d', server.address().port)
 	return createNodes()
 }).then(units => {
 	console.log('Network is fully connected')
-
-	return createHttpServer(units)
-}).then(server => {
-	console.log('http server listening on port %d', server.address().port)
+	listUnits = () => units
 }).catch(err => {
 	console.error(err)
 	process.exit(1)

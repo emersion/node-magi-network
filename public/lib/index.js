@@ -1,5 +1,6 @@
 'use strict'
 
+const path = require('path')
 const signalhub = require('signalhub')
 const swarm = require('hybrid-swarm')
 const Executor = require('../../lib/executor')
@@ -13,14 +14,14 @@ function connected() {
 }
 
 function fetchUnits() {
-	return fetch('/api/units').then(res => res.json())
+	return fetch('api/units').then(res => res.json())
 }
 
 fetchUnits().then(units => {
 	console.log('Got a list of %d units', units.length)
 
 	const sw = swarm({
-		signalhub: signalhub(topic, ['http://127.0.0.1:8081'])
+		signalhub: signalhub(topic, [window.location.origin + path.join(window.location.pathname, '/signalhub')])
 	})
 
 	const name = sw.browser.me
