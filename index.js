@@ -61,7 +61,7 @@ function createSwarm(opts) {
 function createBridge() {
 	return new Node(createSwarm({
 		//wrtc: require('wrtc')
-		wrtc: require('electron-webrtc')()
+		wrtc: require('electron-webrtc')({headless: true})
 	}))
 }
 

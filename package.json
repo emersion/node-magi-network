@@ -30,6 +30,7 @@
     "express": "^4.14.0",
     "fetch-ponyfill": "^3.0.2",
     "finalhandler": "^0.5.0",
+    "global": "^4.3.1",
     "hybrid-swarm": "^1.2.0",
     "secure-gossip": "^0.3.0",
     "serve-static": "^1.11.1",
