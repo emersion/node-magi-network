@@ -11,7 +11,7 @@ const Node = require('./lib/node')
 const BrainUnit = require('./lib/brain-unit')
 const trained = require('./trained')
 
-const port = 8080
+const port = process.env.PORT || 5000
 const topic = 'magi'
 
 const names = ['melchior', 'balthasar', 'casper']
