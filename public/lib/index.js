@@ -3,6 +3,7 @@
 const path = require('path')
 const signalhub = require('signalhub')
 const swarm = require('hybrid-swarm')
+const {fetch} = require('fetch-ponyfill')()
 const Executor = require('../../lib/executor')
 
 const topic = 'magi'

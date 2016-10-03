@@ -28,6 +28,7 @@
     "brain": "^0.7.0",
     "discovery-swarm": "^4.0.2",
     "express": "^4.14.0",
+    "fetch-ponyfill": "^3.0.2",
     "finalhandler": "^0.5.0",
     "hybrid-swarm": "^1.2.0",
     "secure-gossip": "^0.3.0",
