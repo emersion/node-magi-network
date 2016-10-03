@@ -45465,7 +45465,7 @@ fetchUnits().then(units => {
 	console.log('Got a list of %d units', units.length)
 
 	const sw = swarm({
-		signalhub: signalhub(topic, [window.location.origin+path.join(window.location.pathname, '/signalhub')])
+		signalhub: signalhub(topic, [window.location.origin + path.join(window.location.pathname, '/signalhub')])
 	})
 
 	const name = sw.browser.me
