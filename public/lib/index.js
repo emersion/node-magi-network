@@ -1,5 +1,7 @@
 'use strict'
 
+const window = require('global/window')
+const document = require('global/document')
 const path = require('path')
 const signalhub = require('signalhub')
 const swarm = require('hybrid-swarm')
