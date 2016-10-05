@@ -31,7 +31,7 @@
     "fetch-ponyfill": "^3.0.2",
     "finalhandler": "^0.5.0",
     "hybrid-swarm": "^1.2.0",
-    "secure-gossip": "^0.3.0",
+    "secure-gossip": "^0.3.1",
     "serve-static": "^1.11.1",
     "signalhub": "^4.7.4"
   },
