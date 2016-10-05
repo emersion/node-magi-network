@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./index.js",
-    "build": "browserify ./public/lib/index.js -o public/bundle.js"
+    "build": "browserify ./public/lib/index.js -d -p [minifyify --map bundle.js.map --output public/bundle.js.map] > public/bundle.js"
   },
   "repository": {
     "type": "git",
@@ -29,7 +29,6 @@
     "discovery-swarm": "^4.0.2",
     "express": "^4.14.0",
     "fetch-ponyfill": "^3.0.2",
-    "finalhandler": "^0.5.0",
     "global": "^4.3.1",
     "hybrid-swarm": "^1.2.0",
     "secure-gossip": "^0.3.1",
@@ -37,6 +36,7 @@
     "signalhub": "^4.7.4"
   },
   "devDependencies": {
-    "browserify": "^13.1.0"
+    "browserify": "^13.1.0",
+    "minifyify": "^7.3.3"
   }
 }
