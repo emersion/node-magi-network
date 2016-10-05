@@ -2,6 +2,10 @@
 	box-sizing: border-box;
 }
 
+html {
+	font-family: monospace;
+}
+
 html, body {
 	position: absolute;
 	top: 0;
@@ -22,6 +26,7 @@ html, body {
 	margin: 20px;
 	border: 5px solid #ffb200;
 	text-align: center;
+	color: #ffb200;
 }
 
 #hud::before {
@@ -36,16 +41,28 @@ html, body {
 	vertical-align: middle;
 }
 
+#status {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	font-size: 30px;
+	text-transform: uppercase;
+}
+
 #magi {
 	position: relative;
 	width: 500px;
 	height: 500px;
 	border: 2px solid #ffb200;
 	border-radius: 100%;
+	font-size: 20px;
 }
 
 #magi > label {
-	display: none;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 }
 
 #magi .unit {
@@ -59,7 +76,6 @@ html, body {
 	padding: 5px;
 	border: 2px solid #ffb200;
 	background-color: black;
-	color: #ffb200;
 }
 #magi .unit:nth-of-type(1) {
 	transform: rotate(0deg) translate(0, -100%);

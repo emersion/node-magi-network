@@ -10,6 +10,16 @@ const Executor = require('../../lib/executor')
 
 const topic = 'magi'
 
+function setStatus(status) {
+	const el = document.getElementById('status')
+	if (status) {
+		el.style.display = 'block'
+		el.innerText = status
+	} else {
+		el.style.display = 'none'
+	}
+}
+
 function connected() {
 	return new Promise((resolve, reject) => {
 		node.on('connected', () => resolve())
@@ -20,27 +30,15 @@ function fetchUnits() {
 	return fetch('api/units').then(res => res.json())
 }
 
-fetchUnits().then(units => {
-	console.log('Got a list of %d units', units.length)
-
-	const sw = swarm({
-		signalhub: signalhub(topic, [window.location.origin + path.join(window.location.pathname, '/signalhub')])
-	})
-
-	const name = sw.browser.me
-	const exec = new Executor(sw, name, units)
-
-	return new Promise((resolve, reject) => {
-		exec.on('connected', () => resolve(exec))
-	})
-}).then(exec => {
-	console.log('Node connected to network')
-
+let seq = 0
+function ask(exec, data) {
 	const question = {
-		id: '0',
 		module: exec.name,
-		data: { r: 0.95, g: 0.02, b: 0.43 }
+		id: String(seq),
+		data: data
 	}
+
+	seq++
 
 	exec.publish('question', question)
 	console.log('Started poll:', question)
@@ -64,8 +62,37 @@ fetchUnits().then(units => {
 			resolve({question, ok})
 		})
 	})
-}).then(({question, ok}) => {
-	console.log(question, ok)
+}
+
+setStatus('Fetching units...')
+fetchUnits().then(units => {
+	console.log('Got a list of %d units', units.length)
+
+	const hub = signalhub(topic, [
+		window.location.origin + path.join(window.location.pathname, '/signalhub')
+	])
+
+	const sw = swarm({
+		signalhub: hub
+	})
+
+	const name = sw.browser.me
+	const exec = new Executor(sw, name, units)
+
+	setStatus('Connecting node to mesh network...')
+	return new Promise((resolve, reject) => {
+		exec.on('connected', () => resolve(exec))
+	})
+}).then(exec => {
+	console.log('Node connected to network')
+	setStatus(null)
+
+	const question = { r: 0.95, g: 0.02, b: 0.43 }
+
+	setStatus('Propagating question...')
+	return ask(exec, question)
+}).then(() => {
+	setStatus(null)
 }).catch(err => {
 	console.error(err)
 })
