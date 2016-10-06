@@ -61,8 +61,10 @@ function ask(exec, data) {
 				switch (poll[id]) {
 					case true:
 						classes.add('voted-yes')
+						break
 					case false:
 						classes.add('voted-no')
+						break
 				}
 			})
 		})
@@ -78,9 +80,9 @@ function hexToRGB(hex) {
 	hex = hex.replace('#', '')
 
 	return {
-		r: parseInt(hex.substr(0, 2), 16),
-		g: parseInt(hex.substr(2, 2), 16),
-		b: parseInt(hex.substr(4, 2), 16)
+		r: parseInt(hex.substr(0, 2), 16) / 255,
+		g: parseInt(hex.substr(2, 2), 16) / 255,
+		b: parseInt(hex.substr(4, 2), 16) / 255
 	}
 }
 
