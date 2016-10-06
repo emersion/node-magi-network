@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./index.js",
-    "build": "browserify ./public/lib/index.js -d -p [minifyify --map bundle.js.map --output public/bundle.js.map] > public/bundle.js"
+    "watch": "watchify public/lib/index.js -v -o public/bundle.js",
+    "build": "browserify public/lib/index.js -d -p [minifyify --map bundle.js.map --output public/bundle.js.map] -o public/bundle.js"
   },
   "repository": {
     "type": "git",
@@ -37,6 +38,7 @@
   },
   "devDependencies": {
     "browserify": "^13.1.0",
-    "minifyify": "^7.3.3"
+    "minifyify": "^7.3.3",
+    "watchify": "^3.7.0"
   }
 }

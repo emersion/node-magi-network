@@ -955,13 +955,19 @@ const Executor = require('../../lib/executor')
 
 const topic = 'magi'
 
+const dom = {
+	status: document.getElementById('status'),
+	ask: document.getElementById('ask'),
+	askInput: document.querySelector('#ask input[type="color"]'),
+	units: document.querySelectorAll('#magi > .unit')
+}
+
 function setStatus(status) {
-	const el = document.getElementById('status')
 	if (status) {
-		el.style.display = 'block'
-		el.innerText = status
+		dom.status.style.display = 'block'
+		dom.status.innerText = status
 	} else {
-		el.style.display = 'none'
+		dom.status.style.display = 'none'
 	}
 }
 
@@ -989,16 +995,20 @@ function ask(exec, data) {
 	console.log('Started poll:', question)
 
 	return new Promise((resolve, reject) => {
-		const unitsEls = document.querySelectorAll('#magi > .unit')
-
 		exec.on('vote', (question, poll) => {
 			console.log('Got vote:', question, poll)
 
 			exec.units.forEach((id, i) => {
-				const classes = unitsEls[i].classList
+				const classes = dom.units[i].classList
 				classes.remove('voted-yes')
 				classes.remove('voted-no')
-				classes.add(poll[id] ? 'voted-yes' : 'voted-no')
+
+				switch (poll[id]) {
+					case true:
+						classes.add('voted-yes')
+					case false:
+						classes.add('voted-no')
+				}
 			})
 		})
 
@@ -1009,7 +1019,18 @@ function ask(exec, data) {
 	})
 }
 
+function hexToRGB(hex) {
+	hex = hex.replace('#', '')
+
+	return {
+		r: parseInt(hex.substr(0, 2), 16),
+		g: parseInt(hex.substr(2, 2), 16),
+		b: parseInt(hex.substr(4, 2), 16)
+	}
+}
+
 setStatus('Fetching units...')
+dom.ask.style.display = 'none'
 fetchUnits().then(units => {
 	console.log('Got a list of %d units', units.length)
 
@@ -1032,12 +1053,28 @@ fetchUnits().then(units => {
 	console.log('Node connected to network')
 	setStatus(null)
 
-	const question = { r: 0.95, g: 0.02, b: 0.43 }
+	dom.ask.style.display = 'block'
+	dom.askInput.disabled = false
+	dom.askInput.addEventListener('change', event => {
+		event.preventDefault()
 
-	setStatus('Propagating question...')
-	return ask(exec, question)
-}).then(() => {
-	setStatus(null)
+		dom.askInput.disabled = true
+		for (let el of dom.units) {
+			const classes = el.classList
+			classes.remove('voted-yes')
+			classes.remove('voted-no')
+		}
+
+		const question = hexToRGB(dom.askInput.value)
+
+		setStatus('Propagating question...')
+		ask(exec, question).then(() => {
+			dom.askInput.disabled = false
+			setStatus(null)
+		}).catch(err => {
+			console.error('Cannot ask question:', err)
+		})
+	})
 }).catch(err => {
 	console.error(err)
 })
