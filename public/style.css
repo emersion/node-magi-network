@@ -110,9 +110,22 @@ button {
 #magi .unit.voted-yes, #magi .unit.voted-no {
 	color: black;
 }
+#magi .unit.voted-yes::after, #magi .unit.voted-no::after {
+	position: absolute;
+	width: 190px;
+	display: block;
+	bottom: 50px;
+	font-size: 50px;
+}
 #magi .unit.voted-yes {
 	background-color: #62f6b8;
 }
+#magi .unit.voted-yes::after {
+	content: "YES";
+}
 #magi .unit.voted-no {
 	background-color: #bb0104;
+}
+#magi .unit.voted-no::after {
+	content: "NO";
 }
