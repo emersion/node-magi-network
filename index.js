@@ -83,17 +83,18 @@ function createUnits() {
 }
 
 function createNodes() {
-	let units = createUnits()
+	const units = createUnits()
 
+	let nodes = units
 	try {
 		const bridge = createBridge()
 		console.log('Created bridge', bridge.id)
-		units = units.concat(bridge)
+		nodes = nodes.concat(bridge)
 	} catch (err) {
 		console.log('Cannot create bridge:', err)
 	}
 
-	return allConnected(units).then(() => units)
+	return allConnected(nodes).then(() => units)
 }
 
 function fetchUnits() {
